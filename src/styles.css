@@ -159,7 +159,10 @@ body{
   transform:rotate(var(--rot));
   transform-origin:50% 100%;   /* pivot on the bottom edge — cards lift off the page, not out of it */
   box-shadow:0.375rem 0.375rem 0 var(--sh);
-  transition:transform .12s steps(3),box-shadow .12s steps(3);
+  /* Cards are the one place the pixel-art steps() snap is dropped: the overshoot on the
+     way out is what sells the pivot. Everything else on the page still snaps. */
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1),
+             box-shadow .22s cubic-bezier(.34,1.56,.64,1);
 }
 .card-1{--rot:-1.5deg}
 .card-2{
@@ -171,9 +174,7 @@ body{
 }
 .card-3{--rot:-.5deg;margin-top:0.625rem}
 
-/* Swing past upright to the opposite tilt, and grow from the bottom edge.
-   steps(3) keeps it a chunky sprite animation rather than a smooth CSS ease —
-   same language as the post banner's steps(1) snap. */
+/* Swing past upright to the opposite tilt, and grow from the bottom edge. */
 .card:hover,
 .card:focus-within{
   transform:rotate(calc(var(--rot) * -0.7)) scale(1.045) translateY(-0.5rem);
