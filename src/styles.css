@@ -260,3 +260,80 @@ body{
   position:absolute;left:var(--edge);bottom:1.625rem;
   font-size:0.53125rem;color:var(--ol6);opacity:.75;
 }
+
+
+/* ---------------------------------------------------------------------------
+   Phone layout.
+
+   Everything above is one fixed canvas: absolute layers, scaled by root font-size.
+   That can't shrink to a phone — it just makes 4px text. So below 820px the canvas
+   is abandoned wholesale: root font-size goes back to a real 16px (so every rem is
+   the design's own px again) and the layers drop into normal flow as one column
+   that scrolls. Reading order is already correct in the markup, so the stack is
+   nav -> headline -> games -> post -> credit with no reordering.
+   --------------------------------------------------------------------------- */
+@media (max-width:820px){
+
+  html{font-size:16px}
+
+  body{
+    /* Deep enough to hold the whole sun composition below the two-row nav — the glow
+       bars are cream, so any part that spills onto the ground colour disappears. */
+    background-size:1rem 17rem;
+  }
+
+  /* Out of the canvas, into the flow. */
+  .hero{
+    width:auto;
+    height:auto;
+    margin:0;
+    padding:1.75rem var(--edge) 2.5rem;
+    display:flex;
+    flex-direction:column;
+    gap:2rem;
+  }
+  .nav,.headline,.cards,.post,.credit{
+    position:static;
+    inset:auto;
+    width:auto;
+    max-width:none;
+  }
+
+  /* Sky furniture drops into the open band between the nav and the headline. */
+  /* Sun keeps its 64px body and 8px arms — shrinking one without the other turns the
+     pixel sun into a blob. Only the position moves. */
+  .sun{right:2.5rem;top:8.75rem}
+  .sun-glow-1{right:1.75rem;top:14rem;width:5rem}
+  .sun-glow-2{right:2.5rem;top:15rem;width:3.5rem}
+  .cloud-1{left:1.5rem;top:9.5rem}
+  .cloud-2{left:4.25rem;top:11.25rem}
+
+  /* Brand and links don't fit one phone row, so the nav becomes two: wordmark,
+     then the links spread across the full width beneath it. */
+  .nav{flex-wrap:wrap;gap:0.75rem;padding:0.75rem 0.75rem 0.75rem 1rem}
+  .nav-links{width:100%;justify-content:space-between;gap:0.5rem}
+
+  /* Clear the sky band, so the sun isn't sitting behind the headline. */
+  .headline{margin-top:7.5rem}
+  .headline h1{font-size:2.125rem}
+  .sub{max-width:none}
+  .note{align-self:flex-start}
+
+  /* Games: one per row, full width. The tilts stay — they're the character of the
+     thing — and body{overflow-x:clip} absorbs the few px they stick out by. */
+  .cards{flex-direction:column;gap:1.5rem}
+  .card{width:100%}
+  .card-2,.card-3{margin-top:0}
+  .card-art{height:9rem}
+
+  /* Post banner: art strip moves from the side to the top. */
+  .post{flex-direction:column}
+  .post-art{
+    flex:0 0 5rem;
+    border-right:0;
+    border-bottom:0.25rem solid var(--ol6);
+  }
+  .post-body{padding:1rem;gap:1rem}
+
+  .credit{align-self:flex-start}
+}
