@@ -42,7 +42,7 @@ body{
 
 /* Tiled pixel sky. Hero uses the 16x280 scale; card art uses 32x560 + offsets. */
 .sky,.card-art,.post-art{
-  background-image:url(assets/sky-strip.png);
+  background-image:url(/assets/sky-strip.png);
   background-repeat:repeat-x;
   image-rendering:pixelated;
 }
