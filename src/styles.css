@@ -280,6 +280,12 @@ body{
      needs every pixel it can get. */
   :root{--edge:1.25rem}
 
+  /* Overscroll colour. Rubber-banding past the top exposes the canvas background, which
+     was the cream ground and read as a white band above the sky. Setting it on <html>
+     paints that area the sky's top colour instead, so the pull-down reads as more sky.
+     (<body> keeps the cream ground + sky image; only the canvas behind it changes.) */
+  html{background-color:var(--k1)}
+
   body{
     /* Deep enough to hold the whole sun composition below the two-row nav — the glow
        bars are cream, so any part that spills onto the ground colour disappears. */
