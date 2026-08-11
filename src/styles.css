@@ -288,16 +288,24 @@ body{
 
   body{
     /* Deep enough to hold the whole sun composition below the two-row nav — the glow
-       bars are cream, so any part that spills onto the ground colour disappears. */
-    background-size:1rem 17rem;
+       bars are cream, so any part that spills onto the ground colour disappears.
+       Grows by the status-bar inset so the sky still ends below the sun, not through it. */
+    background-size:1rem calc(17rem + env(safe-area-inset-top,0px));
   }
 
-  /* Out of the canvas, into the flow. */
+  /* Out of the canvas, into the flow.
+     With viewport-fit=cover the page extends under the notch and status bar, so the sky
+     paints all the way to the physical top edge. The safe-area insets go on this padding
+     instead, keeping the nav clear of the notch without leaving a blank strip above it. */
   .hero{
     width:auto;
     height:auto;
     margin:0;
-    padding:1.75rem var(--edge) 2.5rem;
+    padding:
+      calc(1.75rem + env(safe-area-inset-top,0px))
+      calc(var(--edge) + env(safe-area-inset-right,0px))
+      calc(2.5rem + env(safe-area-inset-bottom,0px))
+      calc(var(--edge) + env(safe-area-inset-left,0px));
     display:flex;
     flex-direction:column;
     gap:2rem;
@@ -312,11 +320,14 @@ body{
   /* Sky furniture drops into the open band between the nav and the headline. */
   /* Sun keeps its 64px body and 8px arms — shrinking one without the other turns the
      pixel sun into a blob. Only the position moves. */
-  .sun{right:2.5rem;top:8.75rem}
-  .sun-glow-1{right:1.75rem;top:14rem;width:5rem}
-  .sun-glow-2{right:2.5rem;top:15rem;width:3.5rem}
-  .cloud-1{left:1.5rem;top:9.5rem}
-  .cloud-2{left:4.25rem;top:11.25rem}
+  /* These are positioned against the hero's padding box, which the safe-area padding
+     above does NOT move — so each carries the inset itself, or the nav slides down over
+     the sun on a notched phone. */
+  .sun{right:2.5rem;top:calc(8.75rem + env(safe-area-inset-top,0px))}
+  .sun-glow-1{right:1.75rem;top:calc(14rem + env(safe-area-inset-top,0px));width:5rem}
+  .sun-glow-2{right:2.5rem;top:calc(15rem + env(safe-area-inset-top,0px));width:3.5rem}
+  .cloud-1{left:1.5rem;top:calc(9.5rem + env(safe-area-inset-top,0px))}
+  .cloud-2{left:4.25rem;top:calc(11.25rem + env(safe-area-inset-top,0px))}
 
   /* Brand and links don't fit one phone row, so the nav becomes two: wordmark,
      then the links spread across the full width beneath it. */
