@@ -1,6 +1,16 @@
-/* ClearFeed — hero (design option 8b). Fixed 1180x700 reference canvas.
-   ponytail: no responsive scaling yet — page scrolls sideways below 1260px.
-   Add a breakpoint or a scale wrapper when a phone layout is actually needed. */
+/* ClearFeed — hero (design option 8b).
+
+   The design is a 1180x700 pixel canvas. Every length below is in rem, and the root
+   font-size is derived from viewport width, so 1rem = 16px at exactly 1180px wide and
+   the whole canvas scales as one piece below that. No magic numbers per breakpoint:
+   73.75 is 1180/16, i.e. the canvas width expressed in rem.
+
+   Above 1180px the scale caps at 16px — the canvas centres and the sky tiles full-bleed
+   behind it, rather than stretching the layout past its design proportions. */
+
+html{
+  font-size:min(calc(100vw / 73.75), 16px);
+}
 
 :root{
   /* dusk ramp */
@@ -11,19 +21,29 @@
   --pk6:#d98da3; --pk6d:#ac5d7c; --bl6:#5f93b5; --bl6d:#3b6f91;
   --sun:#fff1e6;
 
-  --edge:34px;          /* outer page margin */
-  --shadow-ink:6px 6px 0 rgba(107,74,96,.24);
-  --shadow-blue:6px 6px 0 rgba(59,111,145,.24);
+  --canvas-w:73.75rem;   /* 1180px */
+  --canvas-h:43.75rem;   /*  700px */
+  --sky-h:17.5rem;       /*  280px */
+  --edge:2.125rem;       /*   34px, outer page margin */
+
+  --shadow-ink:0.375rem 0.375rem 0 rgba(107,74,96,.24);
+  --shadow-blue:0.375rem 0.375rem 0 rgba(59,111,145,.24);
 }
 
 *{box-sizing:border-box}
 
+/* Ground colour everywhere, sky strip tiled full-bleed across the top.
+   Painting the sky on the page (not on the canvas) is what makes it reach the
+   window edges on wide screens instead of stopping at the 1180px canvas. */
 body{
   margin:0;
-  padding:40px;
-  display:flex;
-  justify-content:center;
-  background:#f0eee9;
+  min-height:100vh;
+  background-color:var(--g6);
+  background-image:url(/assets/sky-strip.png);
+  background-repeat:repeat-x;
+  background-size:1rem var(--sky-h);
+  background-position:left top;
+  image-rendering:pixelated;
   font-family:Figtree,system-ui,sans-serif;
   color:var(--ink6);
 }
@@ -32,177 +52,173 @@ body{
 .px{font-family:Silkscreen,ui-monospace,monospace}
 
 /* Pixel-art chrome */
-.border{border:3px solid var(--ol6)}
+.border{border:0.1875rem solid var(--ol6)}
 .shadow{box-shadow:var(--shadow-ink)}
 .glass{
   background:rgba(255,248,241,.5);
-  -webkit-backdrop-filter:blur(14px) saturate(1.4);
-  backdrop-filter:blur(14px) saturate(1.4);
+  -webkit-backdrop-filter:blur(0.875rem) saturate(1.4);
+  backdrop-filter:blur(0.875rem) saturate(1.4);
 }
 
-/* Tiled pixel sky. Hero uses the 16x280 scale; card art uses 32x560 + offsets. */
-.sky,.card-art,.post-art{
+/* Card art reuses the same strip at 2x, offset to a different slice of the ramp. */
+.card-art,.post-art{
   background-image:url(/assets/sky-strip.png);
   background-repeat:repeat-x;
+  background-size:2rem 35rem;
   image-rendering:pixelated;
 }
 
 /* Canvas */
 .hero{
   position:relative;
-  width:1180px;
-  height:700px;
-  overflow:hidden;
-  background:var(--g6);
+  width:var(--canvas-w);
+  height:var(--canvas-h);
+  margin:0 auto;
 }
 
-/* Sky */
-.sky{
-  position:absolute; left:0; right:0; top:0; height:280px;
-  background-size:16px 280px;
-}
+/* Sky furniture — positioned against the canvas so the sun stays where the design
+   put it, while the sky itself (on <body>) runs the full width of the window. */
 .sun{
-  position:absolute; right:346px; top:110px; width:64px; height:64px;
+  position:absolute; right:21.625rem; top:6.875rem; width:4rem; height:4rem;
   background-color:var(--sun);
-  box-shadow:0 -8px 0 var(--sun),0 8px 0 var(--sun),-8px 0 0 var(--sun),8px 0 0 var(--sun);
+  box-shadow:0 -0.5rem 0 var(--sun),0 0.5rem 0 var(--sun),
+             -0.5rem 0 0 var(--sun),0.5rem 0 0 var(--sun);
 }
 .sun-glow{position:absolute;background-color:rgba(255,241,230,.62)}
-.sun-glow-1{right:326px;top:190px;width:104px;height:8px}
-.sun-glow-2{right:340px;top:206px;width:76px;height:6px;background-color:rgba(255,241,230,.38)}
+.sun-glow-1{right:20.375rem;top:11.875rem;width:6.5rem;height:0.5rem}
+.sun-glow-2{right:21.25rem;top:12.875rem;width:4.75rem;height:0.375rem;background-color:rgba(255,241,230,.38)}
 .cloud{position:absolute;background-color:#e8f1f5}
-.cloud-1{left:188px;top:36px;width:18px;height:18px}
-.cloud-2{left:232px;top:54px;width:10px;height:10px}
+.cloud-1{left:11.75rem;top:2.25rem;width:1.125rem;height:1.125rem}
+.cloud-2{left:14.5rem;top:3.375rem;width:0.625rem;height:0.625rem}
 
 /* Nav */
 .nav{
-  position:absolute; left:var(--edge); right:var(--edge); top:28px;
+  position:absolute; left:var(--edge); right:var(--edge); top:1.75rem;
   display:flex; align-items:center; justify-content:space-between;
-  padding:10px 12px 10px 16px;
+  padding:0.625rem 0.75rem 0.625rem 1rem;
 }
-.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit}
+.brand{display:flex;align-items:center;gap:0.6875rem;text-decoration:none;color:inherit}
 .brand-mark{
-  width:24px;height:24px;background-color:var(--pk6);
+  width:1.5rem;height:1.5rem;background-color:var(--pk6);
   display:flex;align-items:center;justify-content:center;
 }
-.brand-dot{width:8px;height:8px;background-color:var(--c6)}
-.brand-word{font-family:Caprasimo,serif;font-size:19px}
-.nav-links{display:flex;align-items:center;gap:22px;font:600 12.5px Figtree}
-.nav-link{color:inherit;text-decoration:none;opacity:.7;padding-bottom:3px}
+.brand-dot{width:0.5rem;height:0.5rem;background-color:var(--c6)}
+.brand-word{font-family:Caprasimo,serif;font-size:1.1875rem}
+.nav-links{display:flex;align-items:center;gap:1.375rem;font:600 0.78125rem Figtree}
+.nav-link{color:inherit;text-decoration:none;opacity:.7;padding-bottom:0.1875rem}
 .nav-link:hover{opacity:1}
-.nav-link-current{opacity:1;box-shadow:0 3px 0 var(--pk6)}
+.nav-link-current{opacity:1;box-shadow:0 0.1875rem 0 var(--pk6)}
 
 /* Pills */
 .pill{
   display:inline-block;
-  font-size:10px;
-  padding:9px 14px;
+  font-size:0.625rem;
+  padding:0.5625rem 0.875rem;
   text-decoration:none;
 }
 .pill-pink{background-color:var(--pk6d);color:var(--c6)}
 .pill-pink-light{background-color:var(--pk6);color:#4a2434}
 .pill-blue{background-color:var(--bl6d);color:var(--c6);border-color:var(--bl6d)}
-.pill-blue-dark{background-color:var(--bl6d);color:var(--c6);font-size:10px;padding:12px 18px}
+.pill-blue-dark{background-color:var(--bl6d);color:var(--c6);padding:0.75rem 1.125rem}
 
 /* Headline block */
-.headline{position:absolute;left:var(--edge);top:188px;width:404px}
+.headline{position:absolute;left:var(--edge);top:11.75rem;width:25.25rem}
 .headline h1{
   font-family:Caprasimo,serif;
-  font-size:40px; line-height:1.04; letter-spacing:-.02em;
-  margin:0 0 12px; text-wrap:pretty;
+  font-size:2.5rem; line-height:1.04; letter-spacing:-.02em;
+  margin:0 0 0.75rem; text-wrap:pretty;
 }
 .accent-pink{color:var(--pk6d)}
-.sub{margin:0 0 16px;font:400 14.5px/1.6 Figtree;max-width:40ch;color:rgba(46,36,48,.8)}
+.sub{margin:0 0 1rem;font:400 0.90625rem/1.6 Figtree;max-width:40ch;color:rgba(46,36,48,.8)}
 .note{position:relative;display:inline-block;transform:rotate(-1.4deg)}
-.note-card{padding:12px 16px;max-width:328px;background:rgba(255,248,241,.72)}
-.note-card p{margin:0;font:400 12px/1.5 Figtree;color:rgba(46,36,48,.84)}
+.note-card{padding:0.75rem 1rem;max-width:20.5rem;background:rgba(255,248,241,.72)}
+.note-card p{margin:0;font:400 0.75rem/1.5 Figtree;color:rgba(46,36,48,.84)}
 .note-tape{
-  position:absolute;top:-10px;left:24px;width:54px;height:18px;
+  position:absolute;top:-0.625rem;left:1.5rem;width:3.375rem;height:1.125rem;
   background-color:var(--k5);transform:rotate(-4deg);
 }
 
 /* Game cards */
 .cards{
-  position:absolute;left:474px;top:200px;right:var(--edge);
-  display:flex;gap:20px;align-items:flex-start;
+  position:absolute;left:29.625rem;top:12.5rem;right:var(--edge);
+  display:flex;gap:1.25rem;align-items:flex-start;
 }
-.card{width:198px;background:var(--c6)}
+.card{width:12.375rem;background:var(--c6)}
 .card-1{transform:rotate(-1.5deg)}
-.card-2{transform:rotate(1.3deg);margin-top:30px;border-color:var(--bl6d);box-shadow:var(--shadow-blue)}
-.card-3{transform:rotate(-.5deg);margin-top:10px}
+.card-2{transform:rotate(1.3deg);margin-top:1.875rem;border-color:var(--bl6d);box-shadow:var(--shadow-blue)}
+.card-3{transform:rotate(-.5deg);margin-top:0.625rem}
 
 .card-art{
-  height:140px;
-  background-size:32px 560px;
+  height:8.75rem;
   display:flex;align-items:center;justify-content:center;
 }
-.card-art-1{background-position:0 -140px}
+.card-art-1{background-position:0 -8.75rem}
 .card-art-2{background-position:0 0}
-.card-art-3{background-position:0 -80px}
+.card-art-3{background-position:0 -5rem}
 
-.art-tag{font-size:8.5px;padding:4px 6px}
+.art-tag{font-size:0.53125rem;padding:0.25rem 0.375rem}
 .art-tag-ink{background-color:var(--ol6);color:#f3d6de}
 .art-tag-blue{background-color:var(--bl6d);color:var(--c6)}
 .art-tag-pink{background-color:var(--pk6d);color:var(--c6)}
 
-.card-rule{height:4px}
+.card-rule{height:0.25rem}
 .card-rule-ink{background-color:var(--ol6)}
 .card-rule-blue{background-color:var(--bl6d)}
 
-.card-body{padding:12px 12px 14px}
-.card-title{margin:0 0 8px;font-size:10px}
+.card-body{padding:0.75rem 0.75rem 0.875rem}
+.card-title{margin:0 0 0.5rem;font-size:0.625rem}
 .card-title-ink{color:var(--ol6)}
 .card-title-blue{color:var(--bl6d)}
 .card-title-pink{color:var(--pk6d)}
 
 /* Skeleton text bars */
-.bar{height:8px;margin-bottom:6px}
+.bar{height:0.5rem;margin-bottom:0.375rem}
 .bar-ink{background-color:rgba(107,74,96,.2)}
 .bar-blue{background-color:rgba(59,111,145,.22)}
-.bar-faint{margin-bottom:12px}
+.bar-faint{margin-bottom:0.75rem}
 .bar-ink.bar-faint{background-color:rgba(107,74,96,.13)}
 .bar-blue.bar-faint{background-color:rgba(59,111,145,.14)}
 .bar-50{width:50%}
 .bar-62{width:62%}
 .bar-70{width:70%}
 
-.card .pill{font-size:9px;padding:8px 12px}
+.card .pill{font-size:0.5625rem;padding:0.5rem 0.75rem}
 
 /* Featured post */
 .post{
-  position:absolute;left:474px;bottom:52px;right:var(--edge);
+  position:absolute;left:29.625rem;bottom:3.25rem;right:var(--edge);
   display:flex;align-items:stretch;
   background:var(--c6);color:inherit;text-decoration:none;cursor:pointer;
   transition:transform .08s steps(1),box-shadow .08s steps(1);
 }
-.post:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 rgba(107,74,96,.28)}
-.post:active{transform:translate(4px,4px);box-shadow:0 0 0 rgba(107,74,96,.28)}
+.post:hover{transform:translate(-0.125rem,-0.125rem);box-shadow:0.5rem 0.5rem 0 rgba(107,74,96,.28)}
+.post:active{transform:translate(0.25rem,0.25rem);box-shadow:0 0 0 rgba(107,74,96,.28)}
 .post-art{
-  flex:0 0 128px;
-  background-size:32px 560px;
-  background-position:0 -240px;
-  border-right:4px solid var(--ol6);
+  flex:0 0 8rem;
+  background-position:0 -15rem;
+  border-right:0.25rem solid var(--ol6);
 }
 .post-body{
-  flex:1;padding:16px;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  flex:1;padding:1rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1.25rem;
 }
-.post-text{display:flex;flex-direction:column;gap:6px}
-.post-text h3{margin:0;font-family:Caprasimo,serif;font-size:19px;line-height:1.1}
-.post-text p{margin:0;font:400 12px/1.5 Figtree;color:rgba(46,36,48,.7)}
+.post-text{display:flex;flex-direction:column;gap:0.375rem}
+.post-text h3{margin:0;font-family:Caprasimo,serif;font-size:1.1875rem;line-height:1.1}
+.post-text p{margin:0;font:400 0.75rem/1.5 Figtree;color:rgba(46,36,48,.7)}
 .post .pill{flex:none}
 
 /* Footer furniture */
 .hero-rule{
-  position:absolute;left:var(--edge);bottom:68px;width:404px;height:4px;
+  position:absolute;left:var(--edge);bottom:4.25rem;width:25.25rem;height:0.25rem;
   background-color:var(--ol6);opacity:.55;
 }
 .bird-slot{
-  position:absolute;left:140px;bottom:72px;width:160px;height:160px;
-  border:3px dashed rgba(107,74,96,.45);
-  display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;
+  position:absolute;left:8.75rem;bottom:4.5rem;width:10rem;height:10rem;
+  border:0.1875rem dashed rgba(107,74,96,.45);
+  display:flex;align-items:flex-end;justify-content:center;padding-bottom:0.625rem;
 }
-.bird-slot span{font-size:8.5px;color:var(--ol6);opacity:.7}
+.bird-slot span{font-size:0.53125rem;color:var(--ol6);opacity:.7}
 .credit{
-  position:absolute;left:var(--edge);bottom:26px;
-  font-size:8.5px;color:var(--ol6);opacity:.75;
+  position:absolute;left:var(--edge);bottom:1.625rem;
+  font-size:0.53125rem;color:var(--ol6);opacity:.75;
 }
