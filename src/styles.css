@@ -214,16 +214,6 @@ body{
 .post .pill{flex:none}
 
 /* Footer furniture */
-.hero-rule{
-  position:absolute;left:var(--edge);bottom:4.25rem;width:25.25rem;height:0.25rem;
-  background-color:var(--ol6);opacity:.55;
-}
-.bird-slot{
-  position:absolute;left:8.75rem;bottom:4.5rem;width:10rem;height:10rem;
-  border:0.1875rem dashed rgba(107,74,96,.45);
-  display:flex;align-items:flex-end;justify-content:center;padding-bottom:0.625rem;
-}
-.bird-slot span{font-size:0.53125rem;color:var(--ol6);opacity:.7}
 .credit{
   position:absolute;left:var(--edge);bottom:1.625rem;
   font-size:0.53125rem;color:var(--ol6);opacity:.75;
