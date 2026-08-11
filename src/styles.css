@@ -1,15 +1,17 @@
 /* ClearFeed — hero (design option 8b).
 
    The design is a 1180x700 pixel canvas. Every length below is in rem, and the root
-   font-size is derived from viewport width, so 1rem = 16px at exactly 1180px wide and
-   the whole canvas scales as one piece below that. No magic numbers per breakpoint:
-   73.75 is 1180/16, i.e. the canvas width expressed in rem.
+   font-size is derived from the viewport, so the whole canvas scales as one piece and
+   fills the window like a game screen. The magic numbers are just the canvas expressed
+   in rem: 73.75 = 1180/16 wide, 43.75 = 700/16 tall.
 
-   Above 1180px the scale caps at 16px — the canvas centres and the sky tiles full-bleed
-   behind it, rather than stretching the layout past its design proportions. */
+   Scale off whichever axis is tighter, so the design never overflows either one. On a
+   window matching the design's 1.69 aspect the fit is exact; otherwise the slack lands
+   in the gaps between the top-anchored rows (nav, headline, cards) and the
+   bottom-anchored ones (post, rule, credit) rather than as dead space under the page. */
 
 html{
-  font-size:min(calc(100vw / 73.75), 16px);
+  font-size:min(100dvw / 73.75, 100dvh / 43.75);
 }
 
 :root{
@@ -23,6 +25,7 @@ html{
 
   --canvas-w:73.75rem;   /* 1180px */
   --canvas-h:43.75rem;   /*  700px */
+  --canvas-h-max:52.5rem;/*  840px, 1.2x — stretch ceiling */
   --sky-h:17.5rem;       /*  280px */
   --edge:2.125rem;       /*   34px, outer page margin */
 
@@ -37,7 +40,7 @@ html{
    window edges on wide screens instead of stopping at the 1180px canvas. */
 body{
   margin:0;
-  min-height:100vh;
+  min-height:100dvh;
   background-color:var(--g6);
   background-image:url(/assets/sky-strip.png);
   background-repeat:repeat-x;
@@ -68,11 +71,14 @@ body{
   image-rendering:pixelated;
 }
 
-/* Canvas */
+/* Canvas. Width holds the design's 1180px; height takes the window so the bottom-anchored
+   furniture (post, rule, credit) sits on the real bottom edge. Stretch is capped at 1.2x
+   the design height — past that the gap between the top- and bottom-anchored rows reads
+   as a hole rather than as breathing room, so the leftover becomes ground instead. */
 .hero{
   position:relative;
   width:var(--canvas-w);
-  height:var(--canvas-h);
+  height:clamp(var(--canvas-h), 100dvh, var(--canvas-h-max));
   margin:0 auto;
 }
 
