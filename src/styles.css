@@ -13,12 +13,16 @@
 html{
   font-size:min(100dvw / 73.75, 100dvh / 43.75);
 
-  /* Page background is the sky's top colour, everywhere, unconditionally. <html> is what
-     paints the canvas — every area the document doesn't cover: above the page under a
-     phone's status bar, and the rubber-band strip when you overscroll. Left unset it
-     defaults to white and shows as a band above the sky. Not in a media query on
-     purpose: it must hold whatever the viewport reports. */
-  background-color:var(--k1);
+  /* <html> paints the canvas: everything the document doesn't cover — under the phone's
+     status bar, and the rubber-band strip at either end of a scroll. It needs to be two
+     different colours, so it's a blue band pinned to the top of the document over a cream
+     base. The band scrolls away with the page, so overscrolling at the bottom reveals
+     ground colour while the top stays sky. 50vh is just "taller than any rubber band". */
+  background-color:var(--g6);
+  background-image:linear-gradient(var(--k1),var(--k1));
+  background-repeat:no-repeat;
+  background-size:100% 50vh;
+  background-position:left top;
 }
 
 :root{
