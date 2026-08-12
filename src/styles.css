@@ -48,11 +48,16 @@ body{
   margin:0;
   min-height:100dvh;
   overflow-x:clip;   /* edge-anchored cards grow ~15px wider on hover; clip, don't flash a scrollbar */
-  background-color:var(--g6);
-  background-image:url(/assets/sky-strip.png);
-  background-repeat:repeat-x;
-  background-size:1rem var(--sky-h);
-  background-position:left top;
+
+  /* Two layers over a blue base: the sky strip across the top, then the cream ground
+     starting where the sky ends. The base colour is the sky's blue, NOT the cream —
+     iOS Safari paints the strip behind the status bar by sampling <body>'s background
+     colour, so a cream base shows up there as a near-white band above the sky. */
+  background-color:var(--k1);
+  background-image:url(/assets/sky-strip.png),linear-gradient(var(--g6),var(--g6));
+  background-repeat:repeat-x,no-repeat;
+  background-size:1rem var(--sky-h),100% 100%;
+  background-position:left top,left var(--sky-h);
   image-rendering:pixelated;
   font-family:Figtree,system-ui,sans-serif;
   color:var(--ink6);
@@ -283,15 +288,16 @@ body{
 
   html{font-size:16px}
 
-  /* Narrower page margin — 34px a side is a tenth of the screen, and the card row
-     needs every pixel it can get. */
-  :root{--edge:1.25rem}
+  :root{
+    /* Narrower page margin — 34px a side is a tenth of the screen, and the card row
+       needs every pixel it can get. */
+    --edge:1.25rem;
 
-  body{
     /* Deep enough to hold the whole sun composition below the two-row nav — the glow
        bars are cream, so any part that spills onto the ground colour disappears.
-       Grows by the status-bar inset so the sky still ends below the sun, not through it. */
-    background-size:1rem calc(17rem + env(safe-area-inset-top,0px));
+       Grows by the status-bar inset so the sky still ends below the sun, not through it.
+       Driving it off the token keeps the cream layer's start point in step with it. */
+    --sky-h:calc(17rem + env(safe-area-inset-top,0px));
   }
 
   /* Out of the canvas, into the flow.
