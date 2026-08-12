@@ -12,6 +12,13 @@
 
 html{
   font-size:min(100dvw / 73.75, 100dvh / 43.75);
+
+  /* Page background is the sky's top colour, everywhere, unconditionally. <html> is what
+     paints the canvas — every area the document doesn't cover: above the page under a
+     phone's status bar, and the rubber-band strip when you overscroll. Left unset it
+     defaults to white and shows as a band above the sky. Not in a media query on
+     purpose: it must hold whatever the viewport reports. */
+  background-color:var(--k1);
 }
 
 :root{
@@ -279,12 +286,6 @@ body{
   /* Narrower page margin — 34px a side is a tenth of the screen, and the card row
      needs every pixel it can get. */
   :root{--edge:1.25rem}
-
-  /* Overscroll colour. Rubber-banding past the top exposes the canvas background, which
-     was the cream ground and read as a white band above the sky. Setting it on <html>
-     paints that area the sky's top colour instead, so the pull-down reads as more sky.
-     (<body> keeps the cream ground + sky image; only the canvas behind it changes.) */
-  html{background-color:var(--k1)}
 
   body{
     /* Deep enough to hold the whole sun composition below the two-row nav — the glow
