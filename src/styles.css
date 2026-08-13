@@ -188,6 +188,35 @@ body{
 .note{position:relative;display:inline-block;transform:rotate(-1.4deg)}
 .note-card{padding:0.75rem 1rem;max-width:20.5rem;background:rgba(255,248,241,.72)}
 .note-card p{margin:0;font:400 0.75rem/1.5 Figtree;color:rgba(46,36,48,.84)}
+/* Mascot fills the empty ground below the note. Decorative only — pseudo-element keeps it out
+   of the a11y tree.
+   Hung off .note, not .headline, purely to centre it: .note is inline-block so it's exactly as
+   wide as the card, and `margin:auto` then centres against the card rather than against the
+   headline column, which is 4.5rem wider and would sit the bird visibly off to the right.
+   The counter-rotation cancels .note's -1.4deg — an off-axis pixel grid stair-steps the outline.
+   Size is bounded by the gap below: the card's bottom sits at a fixed 29.7rem (headline is
+   top-anchored) and the credit line's
+   top rises to 40.9rem at zero canvas stretch, the tightest case. The bird is centred on the
+   card and spans roughly 13.9-24.2rem, which overlaps the credit horizontally, so that vertical
+   gap is the only thing keeping them apart — don't spend it. 10.25rem over a 1rem margin leaves
+   0.6rem of it, and only because .credit's bottom offset was cut to buy the room. Growing the
+   credit's font-size eats into this from below too, since it's bottom-anchored and grows upward.
+   multiply, not a flat black overlay: the sprite's light body drops out entirely and the dark
+   outline reads as a deeper tone of whatever ground it sits on, so it stays in the cream palette
+   instead of punching a grey hole in it. Opacity runs higher than a plain overlay would take
+   because multiply is already doing most of the muting.
+   background-size:contain rather than an integer px multiple: the canvas scale is fluid, so no
+   whole-number multiple survives a resize anyway.
+   Two hosts, one paint block: the phone layout moves the bird below the blog banner, and the
+   only element after that in the scroll is .credit — a pseudo-element can't be reordered, so
+   the mascot is declared on both and each breakpoint hides the host it isn't using. */
+.note::after, .credit::before{
+  content:"";display:block;width:10.25rem;height:10.25rem;margin:1rem auto 0;
+  background:url(/assets/mascot.png) no-repeat center/contain;
+  image-rendering:pixelated;mix-blend-mode:multiply;opacity:.5;
+  transform:rotate(1.4deg) scaleX(-1);   /* rotate first: mirroring after it would flip the counter-rotation too */
+}
+.credit::before{display:none}
 .note-tape{
   position:absolute;top:-0.625rem;left:1.5rem;width:3.375rem;height:1.125rem;
   background-color:var(--k5);transform:rotate(-4deg);
@@ -273,8 +302,10 @@ body{
 
 /* Footer furniture */
 .credit{
-  position:absolute;left:var(--edge);bottom:1.625rem;
-  font-size:0.53125rem;color:var(--ol6);opacity:.75;
+  /* 1rem rather than the design's 1.625rem: the mascot above needs the 0.625rem, and the band
+     between the note and this line is full. Raise it back and the bird has to shrink. */
+  position:absolute;left:var(--edge);bottom:1rem;
+  font-size:0.9375rem;color:var(--ol6);opacity:.75;
 }
 
 
@@ -351,6 +382,10 @@ body{
   .headline h1{font-size:2.125rem}
   .sub{max-width:none}
   .note{align-self:flex-start}
+  /* The cards follow the note directly here, so there's no ground under it to fill. The bird
+     moves to the foot of the scroll instead, below the blog banner. No counter-rotation needed
+     at this end — .credit isn't tilted, unlike .note. */
+  .note::after{display:none}
 
   /* Games keep the desktop row — three across, staggered and tilted. At this width they
      have to shrink to fit, so the card's internals scale down with them: three 198px
@@ -372,7 +407,10 @@ body{
   }
   .post-body{padding:1rem;gap:1rem}
 
-  .credit{align-self:flex-start}
+  /* Stretched, not flex-start: the bird is a child of this line now and centres on the page
+     via margin:auto, which needs the full width. The text itself stays left-aligned. */
+  .credit{align-self:stretch}
+  .credit::before{display:block;width:8rem;height:8rem;margin:0 auto 1.25rem;transform:scaleX(-1)}
 }
 
 /* Phone only. Three cards across a 375px screen leaves ~110px each, which the design's
