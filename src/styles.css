@@ -37,7 +37,7 @@ html{
   --canvas-w:73.75rem;   /* 1180px */
   --canvas-h:43.75rem;   /*  700px */
   --canvas-h-max:52.5rem;/*  840px, 1.2x — stretch ceiling */
-  --sky-h:17.5rem;       /*  280px */
+  --sky-h:20.125rem;     /*  322px, the 140px strip at 2.3x */
   --edge:2.125rem;       /*   34px, outer page margin */
 
   --shadow-ink:0.375rem 0.375rem 0 rgba(107,74,96,.24);
@@ -60,7 +60,7 @@ body{
   background-color:var(--k1);
   background-image:url(/assets/sky-strip.png),linear-gradient(var(--g6),var(--g6));
   background-repeat:repeat-x,no-repeat;
-  background-size:1rem var(--sky-h),100% 100%;
+  background-size:1.15rem var(--sky-h),100% 100%;
   background-position:left top,left var(--sky-h);
   image-rendering:pixelated;
   font-family:Figtree,system-ui,sans-serif;
@@ -336,7 +336,7 @@ body{
        bars are cream, so any part that spills onto the ground colour disappears.
        Grows by the status-bar inset so the sky still ends below the sun, not through it.
        Driving it off the token keeps the cream layer's start point in step with it. */
-    --sky-h:calc(17rem + env(safe-area-inset-top,0px));
+    --sky-h:calc(19.55rem + env(safe-area-inset-top,0px));
   }
 
   /* Out of the canvas, into the flow.
